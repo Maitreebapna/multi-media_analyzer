@@ -3,6 +3,7 @@ __pycache__/
 *$py.class
 .Python
 .venv/
+.venv-*/
 venv/
 env/
 .env
@@ -12,6 +13,9 @@ env/
 .ruff_cache/
 .idea/
 .vscode/
-outputs/*.json
-outputs/*.md
+outputs/*
 !outputs/.gitkeep
+!outputs/demo/
+!outputs/demo/**
+datasets/generated/
+Cluster05-Task-Pipe/outputs/

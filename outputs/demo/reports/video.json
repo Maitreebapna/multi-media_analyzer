@@ -1,0 +1,32 @@
+﻿{
+    "kind":  "video",
+    "file":  {
+                 "path":  "../samples/sample.avi",
+                 "name":  "sample.avi",
+                 "size_bytes":  100802,
+                 "size_human":  "98.44 KB",
+                 "mime_type":  "video/avi"
+             },
+    "container":  {
+                      "format_name":  "avi",
+                      "format_long_name":  "AVI video",
+                      "bit_rate_bps":  null
+                  },
+    "duration_seconds":  3.0,
+    "duration":  "00:03",
+    "video_stream":  {
+                         "codec":  "MJPG",
+                         "codec_long_name":  null,
+                         "profile":  null,
+                         "width":  320,
+                         "height":  240,
+                         "resolution":  "320x240",
+                         "fps":  12.0,
+                         "pixel_format":  null,
+                         "bit_rate_bps":  null,
+                         "frame_count":  36
+                     },
+    "audio_stream":  null,
+    "stream_count":  1,
+    "metadata_note":  "OpenCV provides basic video-track metadata only. Audio streams, container tags, and exact bitrates are not inspected."
+}

@@ -1,0 +1,20 @@
+﻿{
+    "kind":  "image",
+    "file":  {
+                 "path":  "../../sample.png",
+                 "name":  "sample.png",
+                 "size_bytes":  110,
+                 "size_human":  "110 B",
+                 "mime_type":  "image/png"
+             },
+    "format":  "PNG",
+    "mode":  "RGB",
+    "width":  32,
+    "height":  32,
+    "dimensions":  "32x32",
+    "animated":  false,
+    "frames":  1,
+    "exif":  {
+
+             }
+}

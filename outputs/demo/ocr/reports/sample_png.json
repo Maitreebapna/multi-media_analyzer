@@ -1,0 +1,11 @@
+﻿{
+    "source":  "sample.png",
+    "enhanced_image":  "enhanced\\sample_png.png",
+    "width":  64,
+    "height":  64,
+    "deskew_angle":  0.0,
+    "language":  "eng",
+    "text":  "",
+    "status":  "enhanced",
+    "error":  null
+}

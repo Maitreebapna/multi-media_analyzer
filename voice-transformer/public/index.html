@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f5f1">
+    <meta name="description" content="Transform a short voice recording with ElevenLabs.">
+    <title>Voice Studio — Voice Transformer</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Voice Studio home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span>voice<span class="brand-light">studio</span></span>
+        </a>
+        <div class="topbar-note"><span class="status-dot"></span> Powered by ElevenLabs</div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <p class="eyebrow">VOICE TRANSFORMER <span></span> AUDIO WORKSPACE</p>
+          <h1>A new voice.<br><span>Still your words.</span></h1>
+          <p class="intro-copy">Record a quick line or bring your own audio. Choose an ElevenLabs voice and hear the same delivery, transformed.</p>
+        </section>
+
+        <section class="studio" aria-label="Voice transformation studio">
+          <div class="studio-heading">
+            <div>
+              <span class="step-label">YOUR SOURCE</span>
+              <h2>Bring in your voice</h2>
+            </div>
+            <span class="time-limit">30 SEC RECORDINGS</span>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Audio source">
+            <button class="tab active" id="record-tab" type="button" role="tab" aria-selected="true" aria-controls="record-panel">Record a clip</button>
+            <button class="tab" id="upload-tab" type="button" role="tab" aria-selected="false" aria-controls="upload-panel">Upload audio</button>
+          </div>
+
+          <div class="source-panel" id="record-panel" role="tabpanel" aria-labelledby="record-tab">
+            <div class="record-orb" aria-hidden="true"><span class="mic-icon">●</span></div>
+            <p class="panel-title" id="record-title">Ready when you are</p>
+            <p class="panel-hint" id="record-hint">Find a quiet spot, then record a short sentence.</p>
+            <div class="record-controls">
+              <button class="button button-record" id="record-button" type="button">
+                <span class="record-indicator"></span><span>Start recording</span>
+              </button>
+              <span class="record-timer" id="record-timer" aria-live="polite">00:00</span>
+            </div>
+          </div>
+
+          <div class="source-panel upload-panel" id="upload-panel" role="tabpanel" aria-labelledby="upload-tab" hidden>
+            <label class="drop-zone" for="audio-file">
+              <span class="upload-icon" aria-hidden="true">↑</span>
+              <span class="panel-title" id="upload-title">Drop an audio file here</span>
+              <span class="panel-hint">or <span class="browse-link">browse files</span> · MP3, WAV, M4A, OGG, WebM · up to 10 MB</span>
+            </label>
+            <input id="audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.webm,.aac,.flac">
+          </div>
+
+          <div class="source-preview" id="source-preview" hidden>
+            <div class="audio-file-icon" aria-hidden="true">♫</div>
+            <div class="source-file">
+              <span class="source-file-name" id="source-file-name"></span>
+              <span class="source-file-meta" id="source-file-meta"></span>
+            </div>
+            <audio id="source-audio" controls aria-label="Preview source audio"></audio>
+            <button class="icon-button" id="clear-source" type="button" aria-label="Remove selected audio">×</button>
+          </div>
+
+          <div class="divider"><span></span><span>THEN GIVE IT A NEW VOICE</span><span></span></div>
+
+          <div class="voice-settings">
+            <label class="field-label" for="voice-id">ELEVENLABS VOICE ID</label>
+            <input class="voice-input" id="voice-id" name="voiceId" type="text" autocomplete="off" placeholder="Paste a voice ID, e.g. JBFqnCBsd6RMkjVDRZzb" maxlength="128">
+            <p class="field-help">Find your voice ID in your <a href="https://elevenlabs.io/app/voice-library" target="_blank" rel="noreferrer">ElevenLabs Voice Library</a> or Voices page.</p>
+          </div>
+
+          <button class="button button-transform" id="transform-button" type="button" disabled>
+            <span>Transform voice</span><span class="arrow" aria-hidden="true">↗</span>
+          </button>
+
+          <p class="error-message" id="error-message" role="alert" hidden></p>
+
+          <section class="result" id="result" aria-labelledby="result-heading" hidden>
+            <div class="result-heading">
+              <div><span class="step-label">YOUR NEW VOICE</span><h2 id="result-heading">Transformation ready</h2></div>
+              <span class="success-mark" aria-hidden="true">✓</span>
+            </div>
+            <audio id="result-audio" controls aria-label="Transformed audio"></audio>
+            <a class="button button-download" id="download-link" download="transformed-voice.mp3">Download MP3 <span aria-hidden="true">↓</span></a>
+          </section>
+        </section>
+
+        <p class="privacy-note"><span aria-hidden="true">◇</span> Your API key stays on this server. Audio is sent to ElevenLabs only when you transform.</p>
+      </main>
+
+      <footer><span>VOICE STUDIO</span><span>Make something that sounds like you.</span></footer>
+    </div>
+  </body>
+</html>

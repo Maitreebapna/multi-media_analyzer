@@ -1,108 +1,138 @@
-# Multimedia Analyzer
-Modern Python CLI that inspects **images**, **audio**, and **video** files, prints a Rich summary in the terminal, and writes a full JSON or Markdown report to `outputs/`.
-CLI for pulling metadata out of images, audio, and video. It prints a short table in the terminal and dumps the full result as JSON or Markdown under `outputs/`.
-## Requirements
-Python 3.10+ is required. Video files also need FFmpeg (`ffprobe` on your PATH).
-- Python 3.10 or newer
-- [FFmpeg](https://ffmpeg.org/) (needed for video analysis via `ffprobe`)
-## Setup
-## Install
-```
-# Windows
-Windows:
+# Multimedia Systems Lab
+
+A Python multimedia project for inspecting and processing images, audio, and
+video, plus an optional OCR pipeline and a separate voice-transformation web
+app.
+
+## Project contents
+
+| Area | Features | Location |
+| --- | --- | --- |
+| Media analyzer | Image EXIF, audio tags/streams, video container and streams; JSON/Markdown reports | `main.py`, `analyzers/`, `core/` |
+| Image lab | Metadata, grayscale, resize, threshold, blur, edges, rotate | `Cluster02-Image-Processing/` |
+| Audio lab | Metadata, mono conversion, peak normalization, reverse | `Cluster03-Audio-Processing/` |
+| Video lab | Metadata, grayscale, half-size resize, trim, reverse, thumbnails/frames | `Cluster04-Video-Processing/` |
+| OCR pipeline | Image enhancement, deskewing, and local Tesseract OCR | `Cluster05-Task-Pipe/` |
+| Voice transformer | Separate Node.js web app for speech-to-speech conversion | `voice-transformer/` |
+
+## Setup (Windows PowerShell)
+
+Python 3.10 or newer is required. OpenCV reads video files directly, so FFmpeg
+and `ffprobe` do not need to be installed. Supported video codecs depend on the
+OpenCV build and input file.
+
 ```powershell
-.venv\Scripts\activate
-pip install -r requirements.txt
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
-## Install FFmpeg
-## FFmpeg (video only)
-Video inspection shells out to `ffprobe`. If it is missing, MediaInspector prints a clean error instead of a stack trace.
-`ffprobe` is what we use for video. Images and audio work without it. If it's missing, you'll get a short error in the terminal, not a stack trace.
-### Windows
-**Windows** — easiest path is:
-1. Download a build from [ffmpeg.org/download.html](https://ffmpeg.org/download.html) (for example, Gyan or BtbN builds).
-2. Unzip it and add the `bin` folder (the one that contains `ffprobe.exe`) to your PATH.
-3. Open a new terminal and confirm:
-```powershell
-ffprobe -version
-```
-Alternatively with winget:
-```powershell
-winget install Gyan.FFmpeg
-```
-## Quick start
+
+OCR additionally needs the Tesseract executable and language data installed on
+the machine; see [`Cluster05-Task-Pipe/README.md`](Cluster05-Task-Pipe/README.md).
+The voice app needs Node.js 20 or newer and an ElevenLabs API key; it uses
+Node's built-in modules, so no npm package installation is needed. See
+[`voice-transformer/README.md`](voice-transformer/README.md). Never commit
+`.env` files or API keys.
+
 ## Try it
-This workspace already includes a sample image you can analyze immediately:
-There's a `sample.png` in the repo if you just want to see it work:
+
+Analyze the included image:
+
 ```powershell
-cd C:\Users\maitree\multi-media_analyzer
-
-[1 line collapsed]
-
 python main.py analyze .\sample.png --format json
 ```
-Or use the helper script:
-Same thing via `run.ps1`:
+
+Each lab prints extracted metadata or the paths of the generated output files.
+Image/audio/video processing creates a new timestamped folder so earlier lab
+outputs are not overwritten. The OCR pipeline writes named files under its
+output directory; choose a new `--output-dir` to keep earlier OCR results.
+Checked-in example reports and transformed media are available in
+[`outputs/demo/`](outputs/demo/README.md); other generated output remains ignored.
+Run the report and processing commands there to see the committed JSON reports,
+images, WAV/AVI examples, and OCR results page.
+
 ```powershell
-cd C:\Users\maitree\multi-media_analyzer
-powershell -ExecutionPolicy Bypass -File .\run.ps1 -Path .\sample.png -Format json
+python Cluster02-Image-Processing/image_metadata.py .\sample.png
+python Cluster02-Image-Processing/image_processing.py .\sample.png
+
+# Processing audio accepts mono or stereo, 16-bit PCM WAV.
+python Cluster03-Audio-Processing/audio_metadata.py .\datasets\generated\sample.wav
+python Cluster03-Audio-Processing/audio_processing.py .\datasets\generated\sample.wav
+
+# Video workflows use OpenCV; codec support depends on your OpenCV build.
+python Cluster04-Video-Processing/video_metadata.py .\datasets\generated\sample.avi
+python Cluster04-Video-Processing/video_processing.py .\datasets\generated\sample.avi --start 0.5 --duration 1
+
+# Enhance an image without OCR, or use OCR when Tesseract is installed.
+python Cluster05-Task-Pipe/ocr_pipeline.py .\sample.png --no-ocr
 ```
-## Usage
-## Commands
-Analyze a file and write a JSON report (default):
-JSON (default):
-```bash
-python main.py analyze path/to/photo.jpg --format json
+
+Generate small synthetic WAV/AVI files for the processing examples:
+
+```powershell
+python .\datasets\generate_samples.py
 ```
-Markdown report:
-Markdown:
-```bash
-python main.py analyze path/to/song.mp3 --format md
+
+Analyzer reports can also be Markdown, and can be written to a custom path:
+
+```powershell
+python main.py analyze .\sample.png --format md --output .\outputs\sample-report.md
 ```
-Video example:
-Video:
-```bash
-python main.py analyze path/to/clip.mp4 --format json
+
+To start and test the optional voice transformer:
+
+```powershell
+cd .\voice-transformer
+Copy-Item .env.example .env
+# Add your ELEVENLABS_API_KEY to .env, then:
+npm start
+# In another terminal in this folder:
+npm test
 ```
-Write to a custom path:
-Write somewhere other than `outputs/`:
-```bash
-python main.py analyze photo.jpg --format md --output ./my-report.md
+
+## Report fields
+
+| Media | Extracted information |
+| --- | --- |
+| Image | File size/type, format, dimensions, color mode, frame count, EXIF camera/date/settings |
+| Audio | Duration, bitrate, sample rate, channels, codec, common and raw tags |
+| Video | Container, duration, video/audio codecs and stream properties |
+
+Processing is deliberately format-limited where the operation requires it:
+audio transforms accept 16-bit PCM WAV; video exports are silent MJPEG AVI.
+
+## Tests
+
+Run the focused Python and web-app checks from the repository root:
+
+```powershell
+python -m unittest discover -s tests -v
+python -m unittest discover -s Cluster05-Task-Pipe -p "test_*.py" -v
+Push-Location .\voice-transformer
+npm test
+Pop-Location
 ```
-The CLI auto-detects media type from extension and MIME type.
-The tool picks image / audio / video from the file extension and MIME type.
-## What gets extracted
-## What's in the report
-| Kind | Fields |
-|------|--------|
-| Image | File size, format, dimensions, color mode, EXIF (camera make/model, capture date, and remaining tags) |
-| Audio | Duration, bitrate, sample rate, channels, tags (artist, album, title, and others) |
-| Video | Container, duration, video stream (resolution, fps, codec), audio stream (codec, channels) |
-- **Image** — size, format, width/height, color mode, EXIF (camera, capture date, plus the rest of the tags if they're there)
-- **Audio** — duration, bitrate, sample rate, channels, tags like artist / album / title
-- **Video** — container, duration, video stream (resolution, fps, codec), audio stream (codec, channels)
-Reports land in `outputs/` as `<filename>_<UTC-timestamp>.json` or `.md`.
-Files are named like `photo_20260910T104854Z.json` (UTC timestamp) and land in `outputs/` unless you pass `--output`.
-## Project layout
-## Layout
+
+The OCR unit tests cover preprocessing and reports without requiring Tesseract.
+Actual text recognition requires the system Tesseract executable and requested
+language data. Video metadata uses OpenCV and does not inspect audio tracks,
+container tags, or exact bitrates.
+
+## Structure
+
+```text
+.
+├── analyzers/                         # Metadata extractors used by main.py
+├── core/                              # Report writing and common checks
+├── multimedia/                        # Shared lab metadata, validation, and CLI
+├── .github/workflows/                 # Python and voice-app checks
+├── Cluster02-Image-Processing/
+├── Cluster03-Audio-Processing/
+├── Cluster04-Video-Processing/
+├── Cluster05-Task-Pipe/
+├── datasets/                          # Synthetic sample generator
+├── voice-transformer/                 # Independent web app
+├── outputs/
+├── main.py
+└── requirements.txt
 ```
-multi-media_analyzer/
-├── main.py                  # Typer CLI
-├── main.py              # typer entry point
-├── run.ps1              # optional Windows helper
-├── requirements.txt
-├── analyzers/
-│   ├── image_parser.py      # Pillow / EXIF
-│   ├── audio_parser.py      # mutagen
-│   └── video_parser.py      # ffprobe
-│   ├── image_parser.py  # Pillow
-│   ├── audio_parser.py  # mutagen
-│   └── video_parser.py  # ffprobe
-├── core/
-│   ├── report_writer.py
-│   └── utils.py
-└── outputs/
-```
-## Error handling
-Missing files, junk media, unsupported types, and a missing `ffprobe` all show up as a red panel. We don't dump a traceback for those.
-Corrupt files, missing paths, unsupported types, and a missing `ffprobe` binary are reported with a red Rich panel. Full Python stack traces are not shown for these expected failures.

@@ -120,7 +120,10 @@ def _print_summary(data: dict[str, Any]) -> None:
             "Video",
             f"{video.get('resolution') or 'n/a'} @ {video.get('fps') or 'n/a'} fps ({video.get('codec') or 'n/a'})",
         )
-        table.add_row("Audio", f"{audio.get('codec') or 'n/a'} / {audio.get('channels') or 'n/a'} ch")
+        if audio:
+            table.add_row("Audio", f"{audio.get('codec') or 'n/a'} / {audio.get('channels') or 'n/a'} ch")
+        else:
+            table.add_row("Audio", "not inspected (OpenCV video metadata)")
 
     stdout.print(table)
 

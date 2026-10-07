@@ -1,0 +1,27 @@
+﻿{
+    "kind":  "audio",
+    "file":  {
+                 "path":  "../samples/sample.wav",
+                 "name":  "sample.wav",
+                 "size_bytes":  441044,
+                 "size_human":  "430.71 KB",
+                 "mime_type":  "audio/wav"
+             },
+    "container":  "audio/wav",
+    "duration_seconds":  5.0,
+    "duration":  "00:05",
+    "bitrate_bps":  705600,
+    "bitrate_kbps":  706,
+    "sample_rate_hz":  44100,
+    "channels":  1,
+    "bits_per_sample":  16,
+    "codec":  "WAVE",
+    "tags":  {
+                 "common":  {
+
+                            },
+                 "all":  {
+
+                         }
+             }
+}
